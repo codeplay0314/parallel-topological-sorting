@@ -3,3 +3,11 @@ _site
 .jekyll-cache
 .jekyll-metadata
 vendor
+
+# IDE configs
+.idea
+.vscode
+
+# Build
+src/serial
+src/serial.dSYM/
