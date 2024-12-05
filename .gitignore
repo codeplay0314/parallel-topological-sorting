@@ -11,3 +11,9 @@ vendor
 # Build
 src/serial
 src/serial.dSYM/
+
+# Output files
+*.out
+
+# Python
+__pycache__/
