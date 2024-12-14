@@ -3,6 +3,7 @@ import time
 
 import networkx as nx
 
+
 class DataLineIn:
     def __init__(self, index, dep_cnt, deps):
         self.index = index
@@ -36,7 +37,7 @@ class TopologicalSort:
 
         end = time.time()
         length = (end - start) * 1000
-        print("{} completed in {:.4f} ms".format(func_name, length))
+        print("{} completed in {} ms".format(func_name, int(length)))
 
     def read_lines_in(self):
         line_cnt = 0
@@ -74,10 +75,36 @@ class TopologicalSort:
         # print(list(nx.ego_graph(self.graph, 2)))
         # print(list(nx.ego_graph(self.graph, 30000)))
 
-        while self.graph.number_of_nodes() > 0:
-            no_dep_nodes = [n for n, d in self.graph.out_degree() if d == 0]
-            self.graph.remove_nodes_from(no_dep_nodes)
-            self.layers.append(no_dep_nodes)
+        # print(len(list(nx.lexicographical_topological_sort(self.graph))))
+        # print(list(nx.topological_sort(self.graph)))
+        # print([sorted(generation) for generation in nx.topological_generations(self.graph)])
+
+        # for layer, nodes in enumerate(nx.topological_generations(self.graph)):
+        #     # `multipartite_layout` expects the layer as a node attribute, so add the
+        #     # numeric layer value as a node attribute
+        #     for node in nodes:
+        #         self.graph.nodes[node]["layer"] = layer
+
+        # # Compute the multipartite_layout using the "layer" node attribute
+        # pos = nx.multipartite_layout(self.graph, subset_key="layer")
+
+        # fig, ax = plt.subplots()
+        # nx.draw_networkx(self.graph, pos=pos, ax=ax)
+        # ax.set_title("DAG layout in topological order")
+        # fig.tight_layout()
+        # plt.show()
+
+        # print(list(nx.topological_generations(self.graph)))
+
+        self.layers = list(nx.topological_generations(self.graph))
+        # self.layers = [sorted(generation) for generation in nx.topological_generations(self.graph)]
+        # print(len(self.layers))
+        self.layers.reverse()
+
+        # while self.graph.number_of_nodes() > 0:
+        #     no_dep_nodes = [n for n, d in self.graph.out_degree() if d == 0]
+        #     self.graph.remove_nodes_from(no_dep_nodes)
+        #     self.layers.append(no_dep_nodes)
 
     def teardown(self):
         with open("{}.out".format(self.path), "w") as f:
@@ -91,7 +118,6 @@ class TopologicalSort:
 def main():
     tests = sys.argv[1:]
     for test in tests:
-
         start = time.time()
 
         topological_sort = TopologicalSort(test)
@@ -101,8 +127,7 @@ def main():
 
         end = time.time()
         length = (end - start) * 1000
-        print("Test completed in {:.4f} ms".format(length))
-
+        print("Test completed in {} ms".format(int(length)))
 
 
 if __name__ == "__main__":

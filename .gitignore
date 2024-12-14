@@ -19,3 +19,5 @@ src/serial.dSYM/
 
 # Python
 __pycache__/
+venv/
+venv_pypy/
