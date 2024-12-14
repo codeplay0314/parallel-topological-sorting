@@ -1,14 +1,12 @@
 #include <thrust/device_vector.h>
-#include <thrust/host_vector.h>
 #include <thrust/copy.h>
 #include <thrust/scan.h>
 #include <thrust/fill.h>
-#include <thrust/sequence.h>
 #include <thrust/reduce.h>
 #include <thrust/for_each.h>
-#include <thrust/execution_policy.h>
 #include <thrust/iterator/counting_iterator.h>
 #include <cuda_runtime.h>
+#include <chrono>
 #include <iostream>
 #include <vector>
 #include <fstream>
@@ -58,17 +56,20 @@ struct ScatterFunctor {
 };
 
 int main(int argc, char **argv) {
-    if (argc != 2) {
-        std::cerr << "Usage: " << argv[0] << " <input.in>\n";
+    if (argc != 3) {
+        std::cerr << "Usage: " << argv[0] << " <input>" << std::endl;
         return 1;
     }
-
-    std::string input = argv[1];    
+    std::string input = argv[1];
     if (input.size() <= 3 || input.substr(input.size() - 3) != ".in") {
         std::cerr << "Error: input file must be a .in file" << std::endl;
         return 1;
     }
-    std::string output  = input.substr(0, input.rfind('.') + 1) + "out";
+    std::string output = argv[2];
+    if (output.size() <= 4 || output.substr(input.size() - 3) != ".out") {
+        std::cerr << "Error: output file must be a .out file" << std::endl;
+        return 1;
+    }
 
     std::ifstream ifs(input);
     if (!ifs) {
@@ -81,6 +82,9 @@ int main(int argc, char **argv) {
         std::cerr << "Error: cannot open file " << output << std::endl;
         return 1;
     }
+
+    // Start measuring initialization time
+    auto start_init = std::chrono::high_resolution_clock::now();
 
     int n;
     ifs >> n;
@@ -124,6 +128,13 @@ int main(int argc, char **argv) {
     const int blockSize = 1024;
 
     std::vector<std::vector<int>> batches;
+    
+    // End measuring initialization time
+    auto end_init = std::chrono::high_resolution_clock::now();
+    auto init_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_init - start_init).count();
+
+    // Start measuring computation time
+    auto start_comp = std::chrono::high_resolution_clock::now();
 
     while (remaining > 0) {
         // Find zero in-degree nodes for this iteration
@@ -171,6 +182,10 @@ int main(int argc, char **argv) {
         thrust::fill(flags.begin(), flags.end(), 0);
     }
 
+    // End measuring computation time
+    auto end_comp = std::chrono::high_resolution_clock::now();
+    auto comp_time = std::chrono::duration_cast<std::chrono::milliseconds>(end_comp - start_comp).count();
+
     ofs << batches.size() << "\n";
     for (auto &batch : batches) {
         ofs << batch.size();
@@ -183,6 +198,10 @@ int main(int argc, char **argv) {
     cudaFree(d_inDegrees);
     cudaFree(d_rowPtr);
     cudaFree(d_edges);
+
+    // Print initialization and computation times
+    std::cout << "Initialization time: " << init_time << " ms" << std::endl;
+    std::cout << "Computation time: " << comp_time << " ms" << std::endl;
 
     return 0;
 }
