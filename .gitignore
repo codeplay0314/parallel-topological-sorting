@@ -12,7 +12,9 @@ vendor
 src/serial
 src/serial.dSYM/
 
-# Output files
+# data
+*.in
+*.std
 *.out
 
 # Python
