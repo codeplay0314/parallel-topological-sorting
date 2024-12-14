@@ -56,6 +56,7 @@ int main(const int argc, const char *argv[]) {
     auto start_comp = std::chrono::high_resolution_clock::now();
 
     // Topological sort
+    int node_left = n;
     std::vector<std::vector<int>> batches;
     std::vector<int> batch;
     for (int i = 0; i < n; ++i) {
@@ -65,6 +66,7 @@ int main(const int argc, const char *argv[]) {
     }
     while (!batch.empty()) {
         batches.push_back(batch);
+        node_left -= batch.size();
         std::vector<int> next_batch;
         for (int i : batch) {
             for (int j : adj[i]) {
@@ -74,6 +76,10 @@ int main(const int argc, const char *argv[]) {
             }
         }
         batch = std::move(next_batch);
+    }
+    if (node_left != 0) {
+        std::cerr << "Error: cycle found : " << node_left << " nodes left\n";
+        return 1;
     }
 
     // End measuring computation time
