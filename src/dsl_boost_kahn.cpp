@@ -47,7 +47,7 @@ int main(const int argc, const char *argv[]) {
     auto start_init = std::chrono::high_resolution_clock::now();
 
     // Create a directed graph - don't use vecS to avoid slow(er) clear_in_edges times
-    typedef adjacency_list<listS, listS, bidirectionalS, Vertex> Graph;
+    typedef adjacency_list<vecS, listS, bidirectionalS, Vertex> Graph;
     Graph g;
 
     int n;
@@ -90,9 +90,6 @@ int main(const int argc, const char *argv[]) {
     // Start measuring computation time
     auto start_comp = std::chrono::high_resolution_clock::now();
 
-    typedef graph_traits<Graph>::vertex_descriptor VertexDes;
-    typedef graph_traits<Graph>::vertex_iterator VertexIter;
-
     Graph::vertex_iterator v, vend;
 
     // Sort all vertices into batches
@@ -102,7 +99,6 @@ int main(const int argc, const char *argv[]) {
 
         std::vector<Graph::vertex_iterator> vi_list(remaining_vertices);
 
-        // std::cout << "remaining_vertices: " << remaining_vertices << std::endl;
         std::vector<int> batch;
 
         int i = 0;
