@@ -15,13 +15,17 @@ We provide synthetic dataset generators, real-world graph conversions, correctne
 
 ```plaintext
 src
-├── test.sh             # Automation test script: runs tests across all implementations and datasets
-├── serial.cpp          # Serial implementation of topological sorting (Kahn’s algorithm)
-├── cuda.cu             # CUDA implementation of topological sorting for parallel speedups
-├── dsl_networkx.py     # DSL-based (NetworkX) Python implementation
-├── dsl_boost.cpp       # DSL-based (Boost Graph Library) C++ implementation
+├── test.sh                 # Automation test script: runs tests across all implementations and datasets
+├── serial.cpp              # Serial implementation of topological sorting (Kahn’s algorithm)
+├── cuda.cu                 # CUDA implementation of topological sorting for parallel speedups
+├── dsl_networkx_builtin.py # DSL-based (NetworkX) Python implementation that uses builtin topological sort algorithm
+├── dsl_networkx_kahn.py    # DSL-based (NetworkX) Python implementation that uses custom Kahn's Algorithm
+├── dsl_boost_builtin.cpp   # DSL-based (Boost Graph Library) C++ implementation that builtin topological sort algorithm
+├── dsl_boost_kahn.cpp      # DSL-based (Boost Graph Library) C++ implementation that uses custom Kahn's Algorithm
+├── psc-run-cpu.sh          # Shell script to run all cpu-based tests on PSC machines
+├── psc-run-gpu.sh          # Shell script to run all gpu-based tests on PSC machines
 └── data
-    ├── generate.sh     # Script to automatically generate all test datasets
+    ├── generate.sh      # Script to automatically generate all test datasets
     ├── node_test
     │   ├── generator.py # Generates Node Test dataset (varying node counts)
     ├── edge_test
@@ -37,8 +41,10 @@ src
 
 - **`serial.cpp`**: Implements a standard topological sort (Kahn's algorithm) as a baseline.
 - **`cuda.cu`**: Parallelizes key steps of topological sorting on GPUs using CUDA. Ideal for large, wide graphs.
-- **`dsl_networkx.py`**: Uses Python's NetworkX library as a DSL to implement topological sorting, useful for easy prototyping and correctness checks.
-- **`dsl_boost.cpp`**: Employs the Boost Graph Library in C++ as a DSL solution, allowing for a high-level yet performant approach.
+- **`dsl_networkx_builtin.py`**: Uses Python's NetworkX library as a DSL to implement topological sorting via the builtin topological sort algorithm.
+- **`dsl_networkx_kahn.py`**: Uses Python's NetworkX library as a DSL to implement topological sorting via Kahn's Algorithm.
+- **`dsl_boost_builtin.cpp`**: Employs the Boost Graph Library in C++ as a DSL solution, allowing for a high-level yet performant approach via the builtin topological sort algorithm.
+- **`dsl_boost_kahn.cpp`**: Employs the Boost Graph Library in C++ as a DSL solution, allowing for a high-level yet performant approach via Kahn's Algorithm.
 
 ### Data Generation and Tests
 
@@ -54,6 +60,8 @@ src
 ### Test Script
 
 - **`test.sh`**: Runs end-to-end tests for all implementations and datasets. It compiles the code, executes topological sorting with each method, and uses `checker.py` to verify correctness. Time measurements are taken for performance comparisons.
+- **`psc-run-cpu.sh`**: Automates runnign CPU based tests on PSC machines.
+- **`psc-run-gpu.sh`**: Automates runnign GPU based tests on PSC machines.
 
 ## Getting Started
 
