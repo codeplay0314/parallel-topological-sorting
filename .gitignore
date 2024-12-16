@@ -4,6 +4,9 @@ _site
 .jekyll-metadata
 vendor
 
+# MacOS
+.DS_Store
+
 # IDE configs
 .idea
 .vscode
@@ -19,3 +22,5 @@ src/serial.dSYM/
 
 # Python
 __pycache__/
+venv/
+venv_pypy/

@@ -35,8 +35,8 @@ class TopologicalSort:
         func()
 
         end = time.time()
-        length = end - start
-        print("{} completed in {:.2f} seconds".format(func_name, length))
+        length = (end - start) * 1000
+        print("{} completed in {:.4f} ms".format(func_name, length))
 
     def read_lines_in(self):
         line_cnt = 0
@@ -63,7 +63,6 @@ class TopologicalSort:
                 self.graph.add_edges_from(line.get_edges())
 
     def process(self):
-
         while self.graph.number_of_nodes() > 0:
             no_dep_nodes = [n for n, d in self.graph.out_degree() if d == 0]
             self.graph.remove_nodes_from(no_dep_nodes)
@@ -81,10 +80,17 @@ class TopologicalSort:
 def main():
     tests = sys.argv[1:]
     for test in tests:
+
+        start = time.time()
+
         topological_sort = TopologicalSort(test)
         topological_sort.timer("Init", topological_sort.init)
         topological_sort.timer("Compute", topological_sort.process)
         topological_sort.timer("Teardown", topological_sort.teardown)
+
+        end = time.time()
+        length = (end - start) * 1000
+        print("Test completed in {:.4f} ms".format(length))
 
 
 if __name__ == "__main__":
