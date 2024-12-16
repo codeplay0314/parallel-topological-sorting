@@ -11,6 +11,8 @@ This is the course project for [CMU 15-618: Parallel Computer Architecture and P
 
 # Post
 
+## [Project Report](/parallel-topological-sorting/docs/report.pdf)
+
 ## [Project Milestone Report](/parallel-topological-sorting/milestone.html)
 
 ## [Project Proposal](/parallel-topological-sorting/proposal.html)
