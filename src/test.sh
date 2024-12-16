@@ -19,7 +19,7 @@ fi
 echo "Compilation of cuda.cu successful."
 
 # Directories to test
-datasets=("node_test" "edge_test" "depth_test")
+datasets=("node_test" "edge_test" "depth_test" "real_world_test")
 
 # Process each dataset directory
 for dataset in "${datasets[@]}"; do

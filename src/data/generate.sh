@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Directories to run the generator script
-directories=("depth_test" "edge_test" "node_test")
+directories=("depth_test" "edge_test" "node_test" "real_world_test")
 
 # Iterate through each directory
 for dir in "${directories[@]}"; do
